@@ -26,7 +26,7 @@ const loadAllIssues = async () => {
   const data = await res.json();
   allIssues = data.data;
   displayIssues(allIssues);
-  console.log(allIssues);
+  console.log(allIssues.length);
 };
 
 // Render Issues
@@ -36,10 +36,6 @@ const displayIssues = (issues) => {
   issueContainer.innerHTML = "";
 
   issues.forEach((issue) => {
-    if (issue.status === "open") {
-      document.getElementById("issue-counter").textContent = allIssues.length;
-    }
-
     const borderTop =
       issue.priority === "low"
         ? "border-t-2 border-t-purple-600"
@@ -107,5 +103,18 @@ const displayCloseIssues = () => {
   displayIssues(closedIssues);
 };
 // Update count
-const updateCount = (id) => {};
+const countAllIssues = () => {
+  document.getElementById("issue-counter").textContent = allIssues.length;
+};
+const countOpenIssues = () => {
+  const openCount = allIssues.filter((issue) => issue.status === "open").length;
+  document.getElementById("issue-counter").textContent = openCount;
+};
+const countClosedIssues = () => {
+  const closeCount = allIssues.filter(
+    (issue) => issue.status === "closed",
+  ).length;
+  document.getElementById("issue-counter").textContent = closeCount;
+};
+
 loadAllIssues();

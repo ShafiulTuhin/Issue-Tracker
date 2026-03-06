@@ -71,21 +71,21 @@
         >
           <button
             id="count-all"
-            onclick="displayAllIssues()"
+            onclick="(displayAllIssues(), countAllIssues())"
             class="border border-gray-300 px-6 py-2 rounded-lg cursor-pointer hover:bg-slate-100 transition duration-300"
           >
             All
           </button>
           <button
             id="count-open"
-            onclick="displayOpenIssues()"
+            onclick="(displayOpenIssues(), countOpenIssues())"
             class="border border-gray-300 px-6 py-2 rounded-lg cursor-pointer hover:bg-slate-100 transition duration-300"
           >
             Open
           </button>
           <button
             id="count-closed"
-            onclick="displayCloseIssues()"
+            onclick="(displayCloseIssues(), countClosedIssues())"
             class="border border-gray-300 px-6 py-2 rounded-lg cursor-pointer hover:bg-slate-100 transition duration-300"
           >
             Closed
@@ -101,7 +101,7 @@
             </div>
             <div>
               <h2 class="text-[#1F2937] text-[20px] font-semibold">
-                <span id="issue-counter">50</span> Issues
+                <span id="issue-counter"></span> Issues
               </h2>
 
               <p class="text-[#64748B]">Track and manage your project issues</p>
