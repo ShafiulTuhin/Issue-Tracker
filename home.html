@@ -32,11 +32,12 @@
       type="text/css"
     />
     <!-- Font awesome -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
       rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     />
 
     <style>
@@ -46,16 +47,20 @@
     </style>
   </head>
   <body class="">
-    <header class="p-6 shadow-sm">
+    <header class="py-6 md:px-10 px-3 shadow-sm">
       <div class="flex justify-between items-center">
         <div class="flex gap-2 items-center">
-          <img src="assets/github-logo.png" class="w-8" alt="header_logo" />
-          <h2>Github Issues Tracker</h2>
+          <img
+            src="assets/github-logo.png"
+            class="w-8 md:me-0 me-4"
+            alt="header_logo"
+          />
+          <h2 class="hidden md:block">Github Issues Tracker</h2>
         </div>
         <div class="join">
           <div>
             <label class="input validator join-item">
-              <i class="fa-thin fa-magnifying-glass"></i>
+              <i class="fa-solid fa-magnifying-glass text-[#64748B]"></i>
               <input
                 id="input-search"
                 type="text"
@@ -64,8 +69,12 @@
               />
             </label>
           </div>
-          <button id="search-button" class="btn btn-primary join-item">
+          <button id="search-button" class="btn btn-primary join-item me-4">
             Search
+          </button>
+          <button id="search-button" class="btn btn-primary join-item">
+            <i class="fa-solid fa-plus"></i>
+            New Issue
           </button>
         </div>
       </div>
