@@ -22,16 +22,14 @@ let allIssues = [];
 const loadAllIssues = async () => {
   const url = "https://phi-lab-server.vercel.app/api/v1/lab/issues";
   const res = await fetch(url);
-  console.log(res);
   const data = await res.json();
   allIssues = data.data;
   displayIssues(allIssues);
-  console.log(allIssues.length);
+  countAllIssues();
 };
 
 // Render Issues
 const displayIssues = (issues) => {
-  console.log(issues);
   const issueContainer = document.getElementById("issue-container");
   issueContainer.innerHTML = "";
 
@@ -50,7 +48,6 @@ const displayIssues = (issues) => {
       issue.priority === "low"
         ? "assets/Closed-Status.png"
         : "assets/Open-Status.png";
-    console.log(issue);
     const renderIssue = document.createElement("div");
 
     renderIssue.innerHTML = `
@@ -88,18 +85,35 @@ const displayIssues = (issues) => {
     issueContainer.appendChild(renderIssue);
   });
 };
+// Add active
+const addActive = (id) => {
+  const activebtn = document.getElementById(id);
+  activebtn.classList.add("btn", "btn-primary");
+};
+// Remove active
+const removeActive = () => {
+  const allBtn = document.querySelectorAll(".remove-active");
+  allBtn.forEach((btn) => btn.classList.remove("btn", "btn-primary"));
+};
 // Render in all button
 const displayAllIssues = () => {
+  removeActive();
+  addActive("button-all");
+
   displayIssues(allIssues);
 };
 // filter issues for open button
 const displayOpenIssues = () => {
   const openIssues = allIssues.filter((issue) => issue.status === "open");
+  removeActive();
+  addActive("button-open");
   displayIssues(openIssues);
 };
 // filter issues for close button
 const displayCloseIssues = () => {
+  removeActive();
   const closedIssues = allIssues.filter((issue) => issue.status === "closed");
+  addActive("button-close");
   displayIssues(closedIssues);
 };
 // Update count
@@ -117,4 +131,13 @@ const countClosedIssues = () => {
   document.getElementById("issue-counter").textContent = closeCount;
 };
 
+// Get single issue
+// const getIssue = async (id) => {
+//   const url = `https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`;
+//   const res = await fetch(url);
+//   const data = await res.json();
+//   console.log(data);
+// };
+// getIssue();
+displayAllIssues();
 loadAllIssues();
