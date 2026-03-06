@@ -46,9 +46,9 @@ const displayIssues = (issues) => {
 
   issues.forEach((issue) => {
     const borderTop =
-      issue.priority === "low"
-        ? "border-t-2 border-t-purple-600"
-        : "border-t-2 border-t-green-600";
+      issue.status === "closed"
+        ? "border-t-3 border-t-purple-600"
+        : "border-t-3 border-t-green-600";
     const priorityColor =
       issue.priority === "high"
         ? "bg-red-300 text-red-600"
@@ -221,6 +221,11 @@ searchBtn &&
     const url = `https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${searchText}`;
     const res = await fetch(url);
     const data = await res.json();
+
+    // Count search result
+    const searchCount = data.data;
+    displayIssues(searchCount);
+    document.getElementById("issue-counter").textContent = searchCount.length;
     if (searchText !== "") {
       displayIssues(data.data);
     } else {
@@ -229,11 +234,6 @@ searchBtn &&
               <h2 class="text-2xl">Please search by any issue name</h2>
             </div>`;
     }
-    // Count search result
-    const searchCount = data.data;
-    displayIssues(searchCount);
-    document.getElementById("issue-counter").textContent = searchCount.length;
-
     manageSpinner(false);
   });
 
