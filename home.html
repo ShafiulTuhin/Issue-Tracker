@@ -120,6 +120,14 @@
           </div>
         </div>
       </section>
+      <!-- Spinner -->
+      <section class="container mx-auto">
+        <div id="spinner" class="py-20 flex hidden justify-center gap-5">
+          <span class="loading loading-spinner text-primary"></span>
+          <span class="loading loading-spinner text-primary"></span>
+          <span class="loading loading-spinner text-primary"></span>
+        </div>
+      </section>
       <!-- Issue container -->
       <section
         id="issue-container"
@@ -156,6 +164,22 @@
           </div>
         </div> -->
       </section>
+      <!--Issue details Modal -->
+      <!-- Open the modal using ID.showModal() method -->
+
+      <dialog id="issue-details-modal" class="modal">
+        <div class="modal-box">
+          <div id="modal-details">
+            <!-- Modal details render here -->
+          </div>
+          <div class="modal-action">
+            <form method="dialog">
+              <!-- if there is a button in form, it will close the modal -->
+              <button class="btn btn-primary">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </main>
     <script src="script.js"></script>
   </body>
