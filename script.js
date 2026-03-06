@@ -210,9 +210,36 @@ const getIssueDetails = (issue) => {
 };
 
 // Filtering search
-const searchBtn = document.getElementById("search-button");
-searchBtn &&
-  searchBtn.addEventListener("click", async () => {
+// const searchBtn = document.getElementById("search-button");
+// searchBtn &&
+//   searchBtn.addEventListener("click", async () => {
+//     removeActive();
+//     const searchText = document.getElementById("input-search").value.trim();
+
+//     manageSpinner(true);
+
+//     const url = `https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${searchText}`;
+//     const res = await fetch(url);
+//     const data = await res.json();
+
+//     // Count search result
+//     const searchCount = data.data;
+//     displayIssues(searchCount);
+//     document.getElementById("issue-counter").textContent = searchCount.length;
+//     if (searchText !== "") {
+//       displayIssues(data.data);
+//     } else {
+//       document.getElementById("issue-container").innerHTML =
+//         ` <div class="text-center py-20 bg-slate-200 col-span-full">
+//               <h2 class="text-2xl">Please search by any issue name</h2>
+//             </div>`;
+//     }
+//     manageSpinner(false);
+//   });
+
+const searchInput = document.getElementById("input-search");
+searchInput &&
+  searchInput.addEventListener("input", async () => {
     removeActive();
     const searchText = document.getElementById("input-search").value.trim();
 
