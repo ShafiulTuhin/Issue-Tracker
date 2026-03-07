@@ -61,9 +61,9 @@ const getLabels = (arr) => {
             icon = "assets/enhancement.png";
             label = "enhancement";
           } else {
-            bgClass = "bg-green-200";
-            textClass = "text-green-600";
-            icon = "assets/enhancement.png";
+            bgClass = "bg-blue-200";
+            textClass = "text-blue-600";
+            icon = "assets/good.png";
             label = "good first issue";
           }
 
@@ -105,19 +105,19 @@ const displayIssues = (issues) => {
             <img src="${priorityImage}" alt="" />
             <h2 class="px-4 ${priorityColor} ">${issue.priority ? issue.priority : "Not defined"}</h2>
           </div>
-          <h2 class="text-[#1F2937] font-semibold">
+          <h2 class="text-[#1F2937] font-semibold line-clamp-1">
          ${issue.title ? issue.title : "Not defined"}
           </h2>
           <p class="text-[#64748B] line-clamp-2">
-            ${issue.description}
+          ${issue.description ? issue.description : "No description"}
           </p>
-          <div class="flex gap-4 shadow-sm pb-8">
+          <div class="flex gap-1 shadow-sm pb-8">
           
-            ${getLabels(issue.labels)}
+            ${issue.labels ? getLabels(issue.labels) : "No labels"}
           </div>
           <div class="text-[#64748B]">
             <p>#1 by ${issue.author}</p>
-            <p>${new Date(issue.createdAt).toLocaleDateString("en-US")}</p>
+            <p>${issue.createdAt ? new Date(issue.createdAt).toLocaleDateString("en-US") : "No date"}</p>
           </div>
         </div>
     `;
@@ -184,7 +184,12 @@ const getIssueDetails = async (id) => {
 
 // Render details of issue in modal window
 const displayModal = (issue) => {
-  const statusColor = issue.status === "open" ? "bg-green-600" : "bg-red-600";
+  const statusColor =
+    issue.status === "open"
+      ? "bg-green-600"
+      : issue.status === "closed"
+        ? "bg-red-600"
+        : "bg-gray-400";
   const priorityBg =
     issue.priority === "high"
       ? "bg-red-300 text-red-600"
@@ -195,29 +200,30 @@ const displayModal = (issue) => {
   const modalDetails = document.getElementById("modal-details");
 
   modalDetails.innerHTML = `
-   <h2 class="font-bold text-2xl text-[#1F2937] mb-4">
-              ${issue.title}
+   <h2 class="font-bold text-2xl text-[#1F2937] mb-4 ">
+              ${issue.title ? issue.title : "No title"}
             </h2>
-            <div class="flex gap-4 my-6 ">
-              <p class="${statusColor} py-1 text-white font-medium rounded-full px-3 mt-4">
-                ${issue.status === "open" ? "Opened" : "Closed"}
-              </p>
-              <p class="text-[#64748B]">Opened by: ${issue.assignee ? issue.assignee : "Not Mentioned"}</p>
-              <p class="text-[#64748B]">${new Date(issue.updatedAt).toLocaleDateString("en-US")}</p>
+            <div class="flex gap-4 my-6">
+               <p class=" ${statusColor} px-3 py-1  text-center rounded-full text-white font-medium">
+                ${issue.status === "open" ? "Opened" : issue.status === "closed" ? "Closed" : "No Status"}
+            </p>          
+            <p class="text-[#64748B]"><span class="text-[#64748B] me-2 text-2xl">•</span>Opened by: ${issue.assignee ? issue.assignee : "Not Mentioned"}</p>    
+            <p class="text-[#64748B]"><span class="text-[#64748B] me-2 text-2xl">•</span>${issue.updatedAt ? new Date(issue.updatedAt).toLocaleDateString("en-US") : "Date is not issued"}</p>
             </div>
+
             <div class="flex gap-4 pb-8">
-             ${getLabels(issue.labels)}
+             ${issue.labels ? getLabels(issue.labels) : "No labels"}
             </div>
             <p class="text-[#64748B] mb-7">
              ${issue.description}
             </p>
-            <div class="flex justify-between items-center">
+            <div class="flex gap-[100px] items-center">
               <div>
-                <p class="text-[#64748B]">Assignee:</p>
+                <p class="text-[#64748B] mb-1">Assignee:</p>
                 <p class="text-[#1F2937] font-bold">${issue.assignee ? issue.assignee : "Not Mentioned"}</p>
               </div>
               <div class="">
-                <p class="text-[#64748B]">Priority:</p>
+                <p class="text-[#64748B] mb-1 md:ml-2 ml-1">Priority:</p>
                 <p class="${priorityBg}  px-3 rounded-full">${issue.priority}</p>
               </div>
             </div>
