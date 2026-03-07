@@ -57,11 +57,16 @@ const getLabels = (arr) => {
             textClass = "text-amber-500";
             icon = "assets/Help.png";
             label = "help wanted";
-          } else {
+          } else if (level === "enhancement") {
             bgClass = "bg-green-200";
             textClass = "text-green-600";
             icon = "assets/enhancement.png";
             label = "enhancement";
+          } else {
+            bgClass = "bg-green-200";
+            textClass = "text-green-600";
+            icon = "assets/enhancement.png";
+            label = "good first issue";
           }
 
           return `
@@ -199,7 +204,7 @@ const getIssueDetails = (issue) => {
               ${issue.title}
             </h2>
             <div class="flex gap-4 my-6">
-              <p class="${statusColor} py-2 text-white font-medium rounded-full px-5">
+              <p class="${statusColor} py-1 text-white font-medium rounded-full px-3 mt-4">
                 ${issue.status === "open" ? "Opened" : "Closed"}
               </p>
               <p class="text-[#64748B]">Opened by ${issue.assignee}</p>
@@ -246,9 +251,12 @@ searchInput &&
     } else {
       document.getElementById("issue-container").innerHTML =
         ` <div class="text-center py-20 bg-slate-200 col-span-full">
-              <h2 class="text-2xl">Input does not matched!</h2>
+              <h2 class="text-2xl">Please type in search box</h2>
             </div>`;
+      displayAllIssues();
+      document.getElementById("issue-counter").textContent = allIssues.length;
     }
+
     manageSpinner(false);
   });
 
