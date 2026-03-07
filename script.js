@@ -2,18 +2,17 @@
 const loginBtn = document.getElementById("login-btn");
 loginBtn &&
   loginBtn.addEventListener("click", () => {
-    const inputName = document.getElementById("input-username");
-    const nameValue = inputName.value;
-    const inputPassword = document.getElementById("input-password");
-    const passwordValue = inputPassword.value;
+    const userName = document.getElementById("input-username").value;
+    const userPassword = document.getElementById("input-password").value;
 
-    if (nameValue !== "admin" || passwordValue !== "admin123") {
+    if (userName !== "admin" || userPassword !== "admin123") {
       alert("Invalid username or password");
       return;
     } else {
       window.location.assign("home.html");
     }
   });
+// Common functions
 // Manage Spinner
 const manageSpinner = (status) => {
   if (status === true) {
@@ -24,20 +23,34 @@ const manageSpinner = (status) => {
     document.getElementById("issue-container").classList.remove("hidden");
   }
 };
-//   Get all Issues
+// Active button
+const addActive = (id) => {
+  const activeBtn = document.getElementById(id);
+  activeBtn.classList.add("btn", "btn-primary");
+};
+addActive("button-all");
+// Remove Button
+const removeActive = () => {
+  const removeBtn = document.querySelectorAll(".remove-active");
+  removeBtn.forEach((btn) => btn.classList.remove("btn", "btn-primary"));
+};
+//all issues are here
 let allIssues = [];
+// counter for issue count for all status
+const issueCount = document.getElementById("issue-counter");
+// Get all issues from API
 const loadAllIssues = async () => {
   manageSpinner(true);
   const url = "https://phi-lab-server.vercel.app/api/v1/lab/issues";
   const res = await fetch(url);
   const data = await res.json();
   allIssues = data.data;
-  displayAllIssues(allIssues);
-  countAllIssues();
-  manageSpinner(false);
-};
 
-// Render Issues
+  displayAllIssues(allIssues);
+  manageSpinner(false);
+  issueCount.innerText = allIssues.length;
+};
+// Rendering Issues
 // mapping labels of issue
 const getLabels = (arr) => {
   return arr && arr.length > 0
@@ -77,12 +90,12 @@ const getLabels = (arr) => {
         .join(" ")
     : `<span class="bg-slate-200 px-4 py-2 rounded-lg">No levels found</span>`;
 };
-// render function
-const displayIssues = (issues) => {
+
+// Display all issues
+const displayAllIssues = (issues) => {
   const issueContainer = document.getElementById("issue-container");
   issueContainer.innerHTML = "";
-
-  issues.forEach((issue) => {
+  for (let issue of issues) {
     const borderTop =
       issue.status === "closed"
         ? "border-t-3 border-t-purple-600"
@@ -97,10 +110,10 @@ const displayIssues = (issues) => {
       issue.priority === "low"
         ? "assets/Closed-Status.png"
         : "assets/Open-Status.png";
-    const renderIssue = document.createElement("div");
 
+    const renderIssue = document.createElement("div");
     renderIssue.innerHTML = `
-  <div onclick="getIssueDetails('${issue.id}')" class="bg-white p-4 space-y-4 rounded-lg h-[300px] ${borderTop}">
+  <div onclick="getIssueDetails('${issue.id}')" class="bg-white p-4 space-y-4 rounded-lg h-[350px] ${borderTop}">
           <div class="flex justify-between items-center">
             <img src="${priorityImage}" alt="" />
             <h2 class="px-4 ${priorityColor} ">${issue.priority ? issue.priority : "Not defined"}</h2>
@@ -115,62 +128,48 @@ const displayIssues = (issues) => {
           
             ${issue.labels ? getLabels(issue.labels) : "No labels"}
           </div>
-          <div class="text-[#64748B]">
-            <p>#1 by ${issue.author}</p>
+          
+          <div class="text-[#64748B] flex justify-between items-center">
+            <p>#1 by ${issue.author ? issue.author : "Author name not found"}</p>
             <p>${issue.createdAt ? new Date(issue.createdAt).toLocaleDateString("en-US") : "No date"}</p>
+          </div>
+            <div class="text-[#64748B] flex justify-between items-center">
+            <p>#1 by ${issue.assignee ? issue.assignee : "Not assigned"}</p>
+            <p>Updated: ${issue.updatedAt ? new Date(issue.updatedAt).toLocaleDateString("en-US") : "No date"}</p>
           </div>
         </div>
     `;
     issueContainer.appendChild(renderIssue);
-  });
+  }
 };
-// Add active
-const addActive = (id) => {
-  const activebtn = document.getElementById(id);
-  activebtn.classList.add("btn", "btn-primary");
-};
-// Remove active
-const removeActive = () => {
-  const allBtn = document.querySelectorAll(".remove-active");
-  allBtn.forEach((btn) => btn.classList.remove("btn", "btn-primary"));
-};
-// Render in all button
-const displayAllIssues = () => {
+// calling all issues
+const allBtn = document.getElementById("button-all");
+allBtn.addEventListener("click", () => {
+  displayAllIssues(allIssues);
+  issueCount.innerText = allIssues.length;
   removeActive();
   addActive("button-all");
-  displayIssues(allIssues);
-};
-// filter issues for open button
+});
+// Display open issues
 const displayOpenIssues = () => {
-  const openIssues = allIssues.filter((issue) => issue.status === "open");
+  const filterOpen = allIssues.filter((issue) => issue.status === "open");
+  displayAllIssues(filterOpen);
+  issueCount.innerText = filterOpen.length;
   removeActive();
   addActive("button-open");
-  displayIssues(openIssues);
 };
-// filter issues for close button
+// Display close issues
 const displayCloseIssues = () => {
+  const filterClose = allIssues.filter((issue) => issue.status === "closed");
+  displayAllIssues(filterClose);
+  issueCount.innerText = filterClose.length;
   removeActive();
-  const closedIssues = allIssues.filter((issue) => issue.status === "closed");
   addActive("button-close");
-  displayIssues(closedIssues);
 };
-// Update count
-const countAllIssues = () => {
-  document.getElementById("issue-counter").textContent = allIssues.length;
-};
-const countOpenIssues = () => {
-  const openCount = allIssues.filter((issue) => issue.status === "open").length;
-  document.getElementById("issue-counter").textContent = openCount;
-};
-const countClosedIssues = () => {
-  const closeCount = allIssues.filter(
-    (issue) => issue.status === "closed",
-  ).length;
-  document.getElementById("issue-counter").textContent = closeCount;
-};
-
+// Render details of issue in modal window
 //issue details modal
 const modal = document.getElementById("issue-details-modal");
+// loading data for single issue
 const getIssueDetails = async (id) => {
   manageSpinner(true);
   const url = `https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`;
@@ -208,9 +207,9 @@ const displayModal = (issue) => {
                 ${issue.status === "open" ? "Opened" : issue.status === "closed" ? "Closed" : "No Status"}
             </p>   
             <span class="text-[#64748B] text-2xl">•</span>       
-            <p class="text-[#64748B] ">Opened by: ${issue.assignee ? issue.assignee : "Not Mentioned"} </p>    
+            <p class="text-[#64748B]">Opened by: <span class="font-bold">${issue.author ? issue.author : "Author name not found"}</span> </p>    
             <span class="text-[#64748B] text-2xl">•</span>
-            <p class="text-[#64748B]">${issue.updatedAt ? new Date(issue.updatedAt).toLocaleDateString("en-US") : "Date is not issued"}</p>
+            <p class="text-[#64748B]">${issue.createdAt ? new Date(issue.createdAt).toLocaleDateString("en-US") : "Date is not issued"}</p>
             </div>
 
             <div class="flex gap-4 pb-8">
@@ -222,38 +221,35 @@ const displayModal = (issue) => {
             <div class="flex gap-[100px] items-center">
               <div>
                 <p class="text-[#64748B] mb-1">Assignee:</p>
-                <p class="text-[#1F2937] font-bold">${issue.assignee ? issue.assignee : "Not Mentioned"}</p>
+                <p class="text-[#1F2937] font-bold">${issue.assignee ? issue.assignee : "Not assigned"}</p>
               </div>
               <div class="">
                 <p class="text-[#64748B] mb-1 md:ml-2 ml-1">Priority:</p>
-                <p class="${priorityBg}  px-3 rounded-full">${issue.priority}</p>
+                <p class="${priorityBg}  px-3 rounded-full">${issue.priority ? issue.priority : "No priority"}</p>
               </div>
             </div>
 `;
 };
-
 // Filtering search
 const searchInput = document.getElementById("input-search");
 searchInput &&
   searchInput.addEventListener("input", async () => {
     removeActive();
     const searchText = document.getElementById("input-search").value.trim();
-
     manageSpinner(true);
-
     const url = `https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${searchText}`;
     const res = await fetch(url);
     const data = await res.json();
 
     // Count search result
     const searchCount = data.data;
-    displayIssues(searchCount);
-    document.getElementById("issue-counter").textContent = searchCount.length;
+
     if (searchText !== "") {
-      displayIssues(data.data);
+      displayAllIssues(searchCount);
+      issueCount.textContent = searchCount.length;
     } else {
-      displayAllIssues();
-      document.getElementById("issue-counter").textContent = allIssues.length;
+      displayAllIssues(allIssues);
+      issueCount.textContent = allIssues.length;
     }
 
     manageSpinner(false);

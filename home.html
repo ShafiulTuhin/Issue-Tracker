@@ -86,21 +86,20 @@
         >
           <button
             id="button-all"
-            onclick="(displayAllIssues(), countAllIssues())"
             class="remove-active border border-gray-300 px-6 py-2 rounded-lg cursor-pointer hover:bg-slate-100 transition duration-300"
           >
             All
           </button>
           <button
             id="button-open"
-            onclick="(displayOpenIssues(), countOpenIssues())"
+            onclick="displayOpenIssues()"
             class="remove-active border border-gray-300 px-6 py-2 rounded-lg cursor-pointer hover:bg-slate-100 transition duration-300"
           >
             Open
           </button>
           <button
             id="button-close"
-            onclick="(displayCloseIssues(), countClosedIssues())"
+            onclick="displayCloseIssues()"
             class="remove-active border border-gray-300 px-6 py-2 rounded-lg cursor-pointer hover:bg-slate-100 transition duration-300"
           >
             Closed
@@ -148,36 +147,7 @@
         id="issue-container"
         class="container mx-auto px-4 mt-6 grid md:grid-cols-4 grid-cols-1 gap-4"
       >
-        <!-- <div class="bg-white p-4 space-y-4 rounded-lg">
-          <div class="flex justify-between items-center">
-            <img src="assets/Open-Status.png" alt="" />
-            <h2 class="px-4 bg-red-300 text-red-600">High</h2>
-          </div>
-          <h2 class="text-[#1F2937] font-semibold">
-            Fix navigation menu on mobile devices
-          </h2>
-          <p class="text-[#64748B]">
-            The navigation menu doesn't collapse properly on mobile devices...
-          </p>
-          <div class="flex gap-4 shadow-sm pb-8">
-            <div
-              class="flex gap-1 items-center bg-red-100 px-4 py-1 rounded-full"
-            >
-              <img src="assets/bug.png" class="w-3 h-5" alt="" />
-              <p class="text-red-400">BUG</p>
-            </div>
-            <div
-              class="flex gap-1 items-center bg-amber-200 px-4 py-1 rounded-full"
-            >
-              <img src="assets/Help.png" class="w-3 h-5" alt="" />
-              <p class="text-amber-500">HELP WANTED</p>
-            </div>
-          </div>
-          <div class="text-[#64748B]">
-            <p>#1 by john_doe</p>
-            <p>1/15/2024</p>
-          </div>
-        </div> -->
+        <!--Render issues here  -->
       </section>
       <!--Issue details Modal -->
       <dialog id="issue-details-modal" class="modal">
