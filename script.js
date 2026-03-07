@@ -2,12 +2,10 @@
 const loginBtn = document.getElementById("login-btn");
 loginBtn &&
   loginBtn.addEventListener("click", () => {
-    console.log("clicked");
     const inputName = document.getElementById("input-username");
     const nameValue = inputName.value;
     const inputPassword = document.getElementById("input-password");
     const passwordValue = inputPassword.value;
-    console.log(nameValue, passwordValue);
 
     if (nameValue !== "admin" || passwordValue !== "admin123") {
       alert("Invalid username or password");
@@ -40,7 +38,7 @@ const loadAllIssues = async () => {
 };
 
 // Render Issues
-// mapping labels
+// mapping labels of issue
 const getLabels = (arr) => {
   return arr && arr.length > 0
     ? arr
@@ -85,8 +83,6 @@ const displayIssues = (issues) => {
   issueContainer.innerHTML = "";
 
   issues.forEach((issue) => {
-    console.log(issue);
-
     const borderTop =
       issue.status === "closed"
         ? "border-t-3 border-t-purple-600"
@@ -104,7 +100,7 @@ const displayIssues = (issues) => {
     const renderIssue = document.createElement("div");
 
     renderIssue.innerHTML = `
-  <div onclick="displayModal('${issue.id}')" class="bg-white p-4 space-y-4 rounded-lg h-[300px] ${borderTop}">
+  <div onclick="getIssueDetails('${issue.id}')" class="bg-white p-4 space-y-4 rounded-lg h-[300px] ${borderTop}">
           <div class="flex justify-between items-center">
             <img src="${priorityImage}" alt="" />
             <h2 class="px-4 ${priorityColor} ">${issue.priority ? issue.priority : "Not defined"}</h2>
@@ -121,7 +117,7 @@ const displayIssues = (issues) => {
           </div>
           <div class="text-[#64748B]">
             <p>#1 by ${issue.author}</p>
-            <p>${issue.createdAt}</p>
+            <p>${new Date(issue.createdAt).toLocaleDateString("en-US")}</p>
           </div>
         </div>
     `;
@@ -175,20 +171,19 @@ const countClosedIssues = () => {
 
 //issue details modal
 const modal = document.getElementById("issue-details-modal");
-
-const displayModal = async (id) => {
+const getIssueDetails = async (id) => {
   manageSpinner(true);
   const url = `https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`;
   const res = await fetch(url);
   const data = await res.json();
-  console.log(data.data);
 
-  getIssueDetails(data.data);
+  displayModal(data.data);
   modal.showModal();
   manageSpinner(false);
 };
 
-const getIssueDetails = (issue) => {
+// Render details of issue in modal window
+const displayModal = (issue) => {
   const statusColor = issue.status === "open" ? "bg-green-600" : "bg-red-600";
   const priorityBg =
     issue.priority === "high"
@@ -203,12 +198,12 @@ const getIssueDetails = (issue) => {
    <h2 class="font-bold text-2xl text-[#1F2937] mb-4">
               ${issue.title}
             </h2>
-            <div class="flex gap-4 my-6">
+            <div class="flex gap-4 my-6 ">
               <p class="${statusColor} py-1 text-white font-medium rounded-full px-3 mt-4">
                 ${issue.status === "open" ? "Opened" : "Closed"}
               </p>
-              <p class="text-[#64748B]">Opened by ${issue.assignee}</p>
-              <p class="text-[#64748B]">${issue.createdAt}</p>
+              <p class="text-[#64748B]">Opened by: ${issue.assignee ? issue.assignee : "Not Mentioned"}</p>
+              <p class="text-[#64748B]">${new Date(issue.updatedAt).toLocaleDateString("en-US")}</p>
             </div>
             <div class="flex gap-4 pb-8">
              ${getLabels(issue.labels)}
@@ -249,10 +244,6 @@ searchInput &&
     if (searchText !== "") {
       displayIssues(data.data);
     } else {
-      document.getElementById("issue-container").innerHTML =
-        ` <div class="text-center py-20 bg-slate-200 col-span-full">
-              <h2 class="text-2xl">Please type in search box</h2>
-            </div>`;
       displayAllIssues();
       document.getElementById("issue-counter").textContent = allIssues.length;
     }
