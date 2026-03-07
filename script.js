@@ -40,11 +40,48 @@ const loadAllIssues = async () => {
 };
 
 // Render Issues
+// mapping labels
+const getLabels = (arr) => {
+  return arr && arr.length > 0
+    ? arr
+        .map((level) => {
+          let bgClass, textClass, icon, label;
+
+          if (level === "bug") {
+            bgClass = "bg-red-100";
+            textClass = "text-red-400";
+            icon = "assets/bug.png";
+            label = "BUG";
+          } else if (level === "help wanted") {
+            bgClass = "bg-amber-200";
+            textClass = "text-amber-500";
+            icon = "assets/Help.png";
+            label = "help wanted";
+          } else {
+            bgClass = "bg-green-200";
+            textClass = "text-green-600";
+            icon = "assets/enhancement.png";
+            label = "enhancement";
+          }
+
+          return `
+          <div class="flex gap-1 items-center ${bgClass} px-4 py-1 rounded-full">
+            <img src="${icon}" class="w-3 h-4" alt="" />
+            <p class="${textClass}">${label}</p>
+          </div>
+          `;
+        })
+        .join(" ")
+    : `<span class="bg-slate-200 px-4 py-2 rounded-lg">No levels found</span>`;
+};
+// render function
 const displayIssues = (issues) => {
   const issueContainer = document.getElementById("issue-container");
   issueContainer.innerHTML = "";
 
   issues.forEach((issue) => {
+    console.log(issue);
+
     const borderTop =
       issue.status === "closed"
         ? "border-t-3 border-t-purple-600"
@@ -62,7 +99,7 @@ const displayIssues = (issues) => {
     const renderIssue = document.createElement("div");
 
     renderIssue.innerHTML = `
-  <div onclick="displayModal('${issue.id}')" class="bg-white p-4 space-y-4 rounded-lg ${borderTop}">
+  <div onclick="displayModal('${issue.id}')" class="bg-white p-4 space-y-4 rounded-lg h-[300px] ${borderTop}">
           <div class="flex justify-between items-center">
             <img src="${priorityImage}" alt="" />
             <h2 class="px-4 ${priorityColor} ">${issue.priority ? issue.priority : "Not defined"}</h2>
@@ -74,18 +111,8 @@ const displayIssues = (issues) => {
             ${issue.description}
           </p>
           <div class="flex gap-4 shadow-sm pb-8">
-            <div
-              class="flex gap-1 items-center bg-red-100 px-4 py-1 rounded-full"
-            >
-              <img src="assets/bug.png" class="w-3 h-4" alt="" />
-              <p class="text-red-400">BUG</p>
-            </div>
-            <div
-              class="flex gap-1 items-center bg-amber-200 px-4 py-1 rounded-full"
-            >
-              <img src="assets/Help.png" class="w-3 h-4" alt="" />
-              <p class="text-amber-500">HELP WANTED</p>
-            </div>
+          
+            ${getLabels(issue.labels)}
           </div>
           <div class="text-[#64748B]">
             <p>#1 by ${issue.author}</p>
@@ -178,19 +205,8 @@ const getIssueDetails = (issue) => {
               <p class="text-[#64748B]">Opened by ${issue.assignee}</p>
               <p class="text-[#64748B]">${issue.createdAt}</p>
             </div>
-            <div class="flex gap-4 shadow-sm pb-8">
-              <div
-                class="flex gap-1 items-center bg-red-100 px-4 py-1 rounded-full"
-              >
-                <img src="assets/bug.png" class="w-3 h-4" alt="" />
-                <p class="text-red-400 text-[12px]">BUG</p>
-              </div>
-              <div
-                class="flex gap-1 items-center bg-amber-200 px-4 py-1 rounded-full"
-              >
-                <img src="assets/Help.png" class="w-3 h-4" alt="" />
-                <p class="text-amber-500 text-[12px]">HELP WANTED</p>
-              </div>
+            <div class="flex gap-4 pb-8">
+             ${getLabels(issue.labels)}
             </div>
             <p class="text-[#64748B] mb-7">
              ${issue.description}
@@ -205,38 +221,10 @@ const getIssueDetails = (issue) => {
                 <p class="${priorityBg}  px-3 rounded-full">${issue.priority}</p>
               </div>
             </div>
-
 `;
 };
 
 // Filtering search
-// const searchBtn = document.getElementById("search-button");
-// searchBtn &&
-//   searchBtn.addEventListener("click", async () => {
-//     removeActive();
-//     const searchText = document.getElementById("input-search").value.trim();
-
-//     manageSpinner(true);
-
-//     const url = `https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${searchText}`;
-//     const res = await fetch(url);
-//     const data = await res.json();
-
-//     // Count search result
-//     const searchCount = data.data;
-//     displayIssues(searchCount);
-//     document.getElementById("issue-counter").textContent = searchCount.length;
-//     if (searchText !== "") {
-//       displayIssues(data.data);
-//     } else {
-//       document.getElementById("issue-container").innerHTML =
-//         ` <div class="text-center py-20 bg-slate-200 col-span-full">
-//               <h2 class="text-2xl">Please search by any issue name</h2>
-//             </div>`;
-//     }
-//     manageSpinner(false);
-//   });
-
 const searchInput = document.getElementById("input-search");
 searchInput &&
   searchInput.addEventListener("input", async () => {
@@ -258,7 +246,7 @@ searchInput &&
     } else {
       document.getElementById("issue-container").innerHTML =
         ` <div class="text-center py-20 bg-slate-200 col-span-full">
-              <h2 class="text-2xl">Please search by any issue name</h2>
+              <h2 class="text-2xl">Input does not matched!</h2>
             </div>`;
     }
     manageSpinner(false);
