@@ -203,12 +203,14 @@ const displayModal = (issue) => {
    <h2 class="font-bold text-2xl text-[#1F2937] mb-4 ">
               ${issue.title ? issue.title : "No title"}
             </h2>
-            <div class="flex gap-4 my-6">
-               <p class=" ${statusColor} px-3 py-1  text-center rounded-full text-white font-medium">
+            <div class="flex justify-between items-center my-6 gap-2">
+               <p class=" ${statusColor} px-3 text-center rounded-full text-white font-medium">
                 ${issue.status === "open" ? "Opened" : issue.status === "closed" ? "Closed" : "No Status"}
-            </p>          
-            <p class="text-[#64748B]"><span class="text-[#64748B] me-2 text-2xl">•</span>Opened by: ${issue.assignee ? issue.assignee : "Not Mentioned"}</p>    
-            <p class="text-[#64748B]"><span class="text-[#64748B] me-2 text-2xl">•</span>${issue.updatedAt ? new Date(issue.updatedAt).toLocaleDateString("en-US") : "Date is not issued"}</p>
+            </p>   
+            <span class="text-[#64748B] text-2xl">•</span>       
+            <p class="text-[#64748B] ">Opened by: ${issue.assignee ? issue.assignee : "Not Mentioned"} </p>    
+            <span class="text-[#64748B] text-2xl">•</span>
+            <p class="text-[#64748B]">${issue.updatedAt ? new Date(issue.updatedAt).toLocaleDateString("en-US") : "Date is not issued"}</p>
             </div>
 
             <div class="flex gap-4 pb-8">
