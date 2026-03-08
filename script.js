@@ -96,6 +96,8 @@ const displayAllIssues = (issues) => {
   const issueContainer = document.getElementById("issue-container");
   issueContainer.innerHTML = "";
   for (let issue of issues) {
+    console.log(issue);
+
     const borderTop =
       issue.status === "closed"
         ? "border-t-3 border-t-purple-600"
@@ -130,11 +132,11 @@ const displayAllIssues = (issues) => {
           </div>
           
           <div class="text-[#64748B] flex justify-between items-center">
-            <p>#1 by ${issue.author ? issue.author : "Author name not found"}</p>
+            <p>#${issue.id} by ${issue.author ? issue.author : "Author name not found"}</p>
             <p>${issue.createdAt ? new Date(issue.createdAt).toLocaleDateString("en-US") : "No date"}</p>
           </div>
             <div class="text-[#64748B] flex justify-between items-center">
-            <p>#1 by ${issue.assignee ? issue.assignee : "Not assigned"}</p>
+            <p>#${issue.id} by ${issue.assignee ? issue.assignee : "Not assigned"}</p>
             <p>Updated: ${issue.updatedAt ? new Date(issue.updatedAt).toLocaleDateString("en-US") : "No date"}</p>
           </div>
         </div>
@@ -202,7 +204,7 @@ const displayModal = (issue) => {
    <h2 class="font-bold text-2xl text-[#1F2937] mb-4 ">
               ${issue.title ? issue.title : "No title"}
             </h2>
-            <div class="flex justify-between items-center my-6 gap-2">
+            <div class="flex justify-between items-center my-6">
                <p class=" ${statusColor} px-3 text-center rounded-full text-white font-medium">
                 ${issue.status === "open" ? "Opened" : issue.status === "closed" ? "Closed" : "No Status"}
             </p>   
